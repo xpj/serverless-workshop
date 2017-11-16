@@ -7,12 +7,19 @@
     Finally remember to set the headers of the response as `'Content-Type': 'text/html'` to return HTML instead of the default `json`
  */
 module.exports.queryParamsExample = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Hi ⊂◉‿◉つ',
-    }),
-  }
+    let name
+    if (event.queryStringParameters && event.queryStringParameters.name) {
+        name = event.queryStringParameters.name
+    }
+    /* generate the hello paragraph */
+    const helloParagraph = greetPerson(name)
+    const response = {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'text/html'
+      },
+      body: generateHtmlPage(helloParagraph)
+    }
   return callback(null, response)
 }
 
@@ -25,13 +32,21 @@ module.exports.queryParamsExample = (event, context, callback) => {
     Finally remember to set the headers of the response as `'Content-Type': 'text/html'` to return HTML instead of the default `json`
  */
 module.exports.pathParamsExample = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Hi ⊂◉‿◉つ',
-    }),
-  }
-  return callback(null, response)
+    let name
+    if (event.pathParameters && event.pathParameters.name) {
+        name = event.pathParameters.name
+    }
+
+    /* generate the hello paragraph */
+    const helloParagraph = greetPerson(name)
+    const response = {
+        statusCode: 200,
+        headers: {
+            'Content-Type': 'text/html',
+        },
+        body: generateHtmlPage(helloParagraph)
+    }
+    return callback(null, response)
 }
 
 /* Utility function for rendering HTML */

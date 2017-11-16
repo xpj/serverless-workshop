@@ -93,6 +93,33 @@ module.exports.delete = (event, context, callback) => {
 
       You can view the dynamoDB docs here: http://amzn.to/2ilqYlM or See the completed code if in `lessons-code-complete` directory
   */
+    const params = {
+        TableName: process.env.MY_TABLE,
+        Key: {
+            id: body.id,
+        },
+    }
+    // delete the todo from the database
+    dynamoDb.delete(params, (error) => {
+        // handle potential errors
+        if (error) {
+            console.error(error)
+            return callback(null, {
+                statusCode: error.statusCode || 501,
+                headers: { 'Content-Type': 'text/plain' },
+                body: 'Couldn\'t remove the todo item.',
+            })
+        }
+
+        // create a response
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: `user ${body.id} deleted`
+            }),
+        }
+        return callback(null, response)
+    })
 
 }
 
@@ -104,4 +131,16 @@ module.exports.delete = (event, context, callback) => {
 */
 /* Function to handle items on the dynamoDB stream */
 module.exports.dynamoStreamHandler = (event, context, callback) => {
+    event.Records.forEach((record) => {
+        console.log(record.eventID)
+        console.log(record.eventName)
+        console.log('DynamoDB Record: %j', record.dynamodb)
+        if (record.eventName === 'INSERT') {
+            console.log('INSERT EVENT. DO WELCOME STUFF')
+        }
+        if (record.eventName === 'REMOVE') {
+            console.log('REMOVAL EVENT. DO REMOVAL STUFF')
+        }
+    })
+    return callback(null, `Successfully processed ${event.Records.length} records.`);
 }

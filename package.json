@@ -13,7 +13,9 @@
   "author": "David Wells",
   "license": "MIT",
   "devDependencies": {
+    "aws-sdk": "^2.151.0",
     "markdown-magic": "^0.1.19",
-    "split-guide-yml": "0.0.3"
+    "split-guide-yml": "0.0.3",
+    "yargs": "^10.0.3"
   }
 }
